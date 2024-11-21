@@ -25,7 +25,6 @@ public class AnalyticsCounter {
             } else if (line.contains("pupils")) {
                 pupilCount++;
             }
-
             line = reader.readLine();    // get another symptom
         }
 
