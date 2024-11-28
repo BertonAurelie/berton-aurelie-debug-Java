@@ -1,38 +1,61 @@
 package com.hemebiotech.analytics;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.util.*;
 
 public class AnalyticsCounter {
 
-    public static void main(String args[]) throws Exception {
-        BufferedReader reader = new BufferedReader(new FileReader("Project02Eclipse/symptoms.txt"));
-        String line = reader.readLine();
+    ISymptomReader fileReader = new ReadSymptomDataFromFile("Project02Eclipse/symptoms.txt");
+    ISymptomWriter fileWriter = new WriteSymptomDataToFile("result.out");
 
-        int headacheCount = 0;
-        int rashCount = 0;
-        int pupilCount = 0;
+    public AnalyticsCounter(ISymptomReader reader, ISymptomWriter writer){
+        this.fileReader = reader;
+        this.fileWriter = writer;
+    }
 
-        while (line != null) {
+    public List<String> getSymptoms() {
+        return this.fileReader.GetSymptoms();
+    }
 
-            System.out.println("symptom from file: " + line);
-            if (line.equals("headache")) {
-                headacheCount++;
-                System.out.println("number of headaches: " + headacheCount);
-            } else if (line.equals("rush")) {
-                rashCount++;
-            } else if (line.contains("pupils")) {
-                pupilCount++;
+    public Map<String, Integer> countSymptoms(List<String> symptoms) {
+
+        Map<String, Integer> symptomsMap = new HashMap<>();
+
+        for (String line : symptoms) {
+            if(symptomsMap.containsKey(line)){
+                int oldValue = symptomsMap.get(line);
+                int newValue = oldValue + 1;
+                symptomsMap.put(line,newValue);
+
+            } else {
+                symptomsMap.put(line,1);
             }
-            line = reader.readLine();    // get another symptom
+        }
+        return symptomsMap;
+    }
+
+    public Map<String, Integer> sortSymptoms(Map<String, Integer> symptoms) {
+        SortedMap<String, Integer> map = new TreeMap<String, Integer>();
+        map.putAll(symptoms);
+
+        Set<String> keys = map.keySet();
+
+        for (String key : keys) {
+            System.out.println(key + " --> " + map.get(key));
         }
 
-        // next generate output
-        FileWriter writer = new FileWriter("result.out");
-        writer.write("headache: " + headacheCount + "\n");
-        writer.write("rash: " + rashCount + "\n");
-        writer.write("dialated pupils: " + pupilCount + "\n");
-        writer.close();
+        System.out.println("--- entrySet ---");
+        Set<Map.Entry<String,Integer>> entrySet = map.entrySet();
+
+        for (Map.Entry<String,Integer> entry: entrySet) {
+            System.out.println(entry.getKey() + " --> " + entry.getValue());
+        }
+        return map;
+
     }
+
+    public void writeSymptoms(Map<String, Integer> symptoms) {
+        this.fileWriter.writeSymptoms(symptoms);
+    }
+
 }
+
