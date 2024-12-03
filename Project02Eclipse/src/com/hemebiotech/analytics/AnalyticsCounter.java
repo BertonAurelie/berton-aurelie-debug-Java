@@ -4,8 +4,8 @@ import java.util.*;
 
 public class AnalyticsCounter {
 
-    ISymptomReader fileReader = new ReadSymptomDataFromFile("Project02Eclipse/symptoms.txt");
-    ISymptomWriter fileWriter = new WriteSymptomDataToFile("result.out");
+    private ISymptomReader fileReader;
+    private ISymptomWriter fileWriter;
 
     public AnalyticsCounter(ISymptomReader reader, ISymptomWriter writer){
         this.fileReader = reader;
@@ -13,7 +13,7 @@ public class AnalyticsCounter {
     }
 
     public List<String> getSymptoms() {
-        return this.fileReader.GetSymptoms();
+        return this.fileReader.getSymptoms();
     }
 
     public Map<String, Integer> countSymptoms(List<String> symptoms) {
@@ -53,6 +53,10 @@ public class AnalyticsCounter {
 
     }
 
+    /**
+     *
+     * @param symptoms
+     */
     public void writeSymptoms(Map<String, Integer> symptoms) {
         this.fileWriter.writeSymptoms(symptoms);
     }
